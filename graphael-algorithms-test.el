@@ -111,7 +111,7 @@
          (goal-id (node-id goal-node)))
 
     ;; Test Dijkstra's algorithm using multiple values
-    (cl-multiple-value-bind (path cost) (graph-find-shortest-path g start-id goal-id)
+    (cl-multiple-value-bind (path cost) (graph-find-path-shortest g start-id goal-id)
       ;; Path should exist
       (should path)
       ;; Path should start at start node and end at goal node
@@ -145,7 +145,7 @@
       (should (equal (car (last path)) goal-node))
 
       ;; Compare with Dijkstra cost
-      (cl-multiple-value-bind (_ dijkstra-cost) (graph-find-shortest-path g start-id goal-id)
+      (cl-multiple-value-bind (_ dijkstra-cost) (graph-find-path-shortest g start-id goal-id)
         (should (= cost dijkstra-cost))))))
 
 (ert-deftest graphael-pathfinding-error-test ()
@@ -164,7 +164,7 @@
 
     ;; Test invalid cases
     (should-error (graph-find-path g start-id "invalid-id"))
-    (should-error (graph-find-shortest-path g start-id "invalid-id"))
+    (should-error (graph-find-path-shortest g start-id "invalid-id"))
     (should-error (graph-find-path-astar g start-id "invalid-id" manhattan))
 
     ;; Test nodes with no path between them
@@ -173,7 +173,7 @@
 
       ;; Test shortest path with no solution
       (cl-multiple-value-bind (path cost)
-        (graph-find-shortest-path g start-id (node-id isolated-node))
+        (graph-find-path-shortest g start-id (node-id isolated-node))
         (should-not path)
         (should-not cost))
 

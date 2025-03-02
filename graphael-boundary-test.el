@@ -194,7 +194,7 @@
 
         ;; Use cl-multiple-value-bind for multiple return values
         (cl-multiple-value-bind (dijkstra-path dijkstra-cost)
-          (graph-find-shortest-path g start-id end-id)
+          (graph-find-path-shortest g start-id end-id)
 
           ;; A* with Manhattan heuristic
           (let* ((manhattan-fn (graph-astar-manhattan-distance g #'get-coord)))
@@ -273,7 +273,7 @@
     (should (= (edge-weight e2) 0.0))
 
     ;; Test shortest path chooses the zero-weight edge
-    (cl-multiple-value-bind (path cost) (graph-find-shortest-path g (node-id n1) (node-id n3))
+    (cl-multiple-value-bind (path cost) (graph-find-path-shortest g (node-id n1) (node-id n3))
       ;; Path should go through n2
       (should (= (length path) 3))
       (should (equal (nth 0 path) n1))

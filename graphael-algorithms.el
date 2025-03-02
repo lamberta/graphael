@@ -202,26 +202,26 @@ Return multiple values: PATH and DISTANCE, where PATH is a list of nodes
 and DISTANCE is the total accumulated weight."
   (graph-find-path-astar graph (node-id from) (node-id to) heuristic-fn))
 
-(cl-defgeneric graph-find-shortest-path (graph from to)
+(cl-defgeneric graph-find-path-shortest (graph from to)
   "Find shortest path between FROM and TO in GRAPH.
-Return multiple values: PATH and DISTANCE, where PATH is a list of nodes
-and DISTANCE is the total accumulated weight.")
-
-(cl-defmethod graph-find-shortest-path ((graph graph) (from-id string) (to-id string))
-  "Find shortest path between FROM-ID and TO-ID in GRAPH.
 Return multiple values: PATH and DISTANCE, where PATH is a list of nodes
 and DISTANCE is the total accumulated weight.
 
 This uses A* algorithm with a zero heuristic, making it equivalent to Dijkstra's
-algorithm. For more advanced pathfinding, use `graph-find-path-astar` directly."
+algorithm. For more advanced pathfinding, use `graph-find-path-astar` directly.")
+
+(cl-defmethod graph-find-path-shortest ((graph graph) (from-id string) (to-id string))
+  "Find shortest path between FROM-ID and TO-ID in GRAPH.
+Return multiple values: PATH and DISTANCE, where PATH is a list of nodes
+and DISTANCE is the total accumulated weight."
   (graph-find-path-astar graph from-id to-id nil))
 
 
-(cl-defmethod graph-find-shortest-path ((graph graph) (from graph-node) (to graph-node))
+(cl-defmethod graph-find-path-shortest ((graph graph) (from graph-node) (to graph-node))
   "Find shortest path between FROM and TO nodes in GRAPH.
 Return multiple values: PATH and DISTANCE, where PATH is a list of nodes
 and DISTANCE is the total accumulated weight."
-  (graph-find-shortest-path graph (node-id from) (node-id to)))
+  (graph-find-path-shortest graph (node-id from) (node-id to)))
 
 ;;; Heuristic Generators for A*
 

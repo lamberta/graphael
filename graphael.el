@@ -39,7 +39,7 @@
 ;;   (graph-edge-add g :from n1 :to n2)
 ;;
 ;;   ;; Find paths between nodes
-;;   (graph-find-shortest-path g n1 n2)
+;;   (graph-find-path-shortest g n1 n2)
 
 ;;; Code:
 

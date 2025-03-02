@@ -66,7 +66,16 @@ Add to your `.emacs` configuration:
 
 ## Advanced usage
 
-### Find paths between nodes
+### Find shortest path
+
+```elisp
+(cl-multiple-value-bind (path distance)
+  ;; Use Dijkstra's algorithm
+  (graph-find-path-shortest g node1 node3)
+  (message "Length: %d nodes, Distance: %.1f" (length path) distance))
+```
+
+### Find path between nodes using A*
 
 ```elisp
 ;; Assume grid layout and set (x . y) coordinates for each node
