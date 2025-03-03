@@ -66,17 +66,17 @@
     (should (graph-edge-p g edge-id))
     (should (= (hash-table-count (graph-edges g)) 1))
     ;; Test edge connections
-    (should (equal (graph-get-node-edges g (node-id node1)) (list edge)))
-    (should (equal (graph-get-node-edges g (node-id node2) t) (list edge)))
+    (should (equal (graph-node-edges g (node-id node1)) (list edge)))
+    (should (equal (graph-node-edges g (node-id node2) t) (list edge)))
     ;; Test connected nodes
-    (should (equal (graph-get-neighbors g (node-id node1)) (list node2)))
-    (should (equal (graph-get-neighbors g (node-id node2) t) (list node1)))
+    (should (equal (graph-neighbors g (node-id node1)) (list node2)))
+    (should (equal (graph-neighbors g (node-id node2) t) (list node1)))
     ;; Test edge removal
     (graph-edge-remove g edge)
     (should-not (graph-edge-p g edge-id))
     (should (= (hash-table-count (graph-edges g)) 0))
-    (should-not (graph-get-node-edges g (node-id node1)))
-    (should-not (graph-get-node-edges g (node-id node2) t))))
+    (should-not (graph-node-edges g (node-id node1)))
+    (should-not (graph-node-edges g (node-id node2) t))))
 
 (ert-deftest graphael-multiple-dispatch-test ()
   "Test that multiple dispatch methods work consistently."
@@ -89,14 +89,14 @@
     (graph-edge-add g :from n1 :to n2)
     (graph-edge-add g :from n1 :to n3)
     ;; Test get-neighbors with both node and ID
-    (let ((neighbors1 (graph-get-neighbors g n1))
-          (neighbors2 (graph-get-neighbors g id1)))
+    (let ((neighbors1 (graph-neighbors g n1))
+          (neighbors2 (graph-neighbors g id1)))
       (should (= (length neighbors1) 2))
       (should (equal neighbors1 neighbors2)))
 
     ;; Test get-node-edges with both node and ID
-    (let ((edges1 (graph-get-node-edges g n1))
-          (edges2 (graph-get-node-edges g id1)))
+    (let ((edges1 (graph-node-edges g n1))
+          (edges2 (graph-node-edges g id1)))
       (should (= (length edges1) 2))
       (should (equal edges1 edges2)))))
 
@@ -112,7 +112,7 @@
     (let ((uuid "12345678-1234-1234-1234-123456789012"))
       (should-not (graph-node-get g uuid))
       (should-error (graph-node-remove g uuid))
-      (should-error (graph-get-node-edges g uuid)))
+      (should-error (graph-node-edges g uuid)))
 
     ;; Self-loops
     (let* ((node (graph-node-add g))
@@ -168,12 +168,12 @@
     (should (graph-edge-p g (edge-id edge1)))
     (should (graph-edge-p g (edge-id edge2)))
     ;; Check outgoing edges for node1 - should contain both edges
-    (let ((outgoing (graph-get-node-edges g id1)))
+    (let ((outgoing (graph-node-edges g id1)))
       (should (= (length outgoing) 2))
       (should (member edge1 outgoing))
       (should (member edge2 outgoing)))
     ;; Check incoming edges for node2 - should contain both edges
-    (let ((incoming (graph-get-node-edges g id2 t)))
+    (let ((incoming (graph-node-edges g id2 t)))
       (should (= (length incoming) 2))
       (should (member edge1 incoming))
       (should (member edge2 incoming)))))

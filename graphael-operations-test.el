@@ -262,15 +262,15 @@
       (should (= (length edges) 3))
 
       ;; Each node should have correct edge counts
-      (should (= (length (graph-get-node-edges g id1)) 1))
-      (should (= (length (graph-get-node-edges g id2)) 1))
-      (should (= (length (graph-get-node-edges g id3)) 1))
-      (should (= (length (graph-get-node-edges g id4)) 0))
+      (should (= (length (graph-node-edges g id1)) 1))
+      (should (= (length (graph-node-edges g id2)) 1))
+      (should (= (length (graph-node-edges g id3)) 1))
+      (should (= (length (graph-node-edges g id4)) 0))
 
-      (should (= (length (graph-get-node-edges g id1 t)) 0))
-      (should (= (length (graph-get-node-edges g id2 t)) 1))
-      (should (= (length (graph-get-node-edges g id3 t)) 1))
-      (should (= (length (graph-get-node-edges g id4 t)) 1)))))
+      (should (= (length (graph-node-edges g id1 t)) 0))
+      (should (= (length (graph-node-edges g id2 t)) 1))
+      (should (= (length (graph-node-edges g id3 t)) 1))
+      (should (= (length (graph-node-edges g id4 t)) 1)))))
 
 (ert-deftest graphael-stats-test ()
   "Test graph statistics functions."

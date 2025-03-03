@@ -122,9 +122,9 @@ to matching nodes."
     (when include-connected
       (let ((additional-ids nil))
         (dolist (id node-ids)
-          (dolist (neighbor (graph-get-neighbors graph id))
+          (dolist (neighbor (graph-neighbors graph id))
             (push (node-id neighbor) additional-ids))
-          (dolist (neighbor (graph-get-neighbors graph id t))
+          (dolist (neighbor (graph-neighbors graph id t))
             (push (node-id neighbor) additional-ids)))
         (setq node-ids (cl-union node-ids additional-ids :test #'equal))))
 

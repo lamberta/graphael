@@ -60,8 +60,8 @@ Add to your `.emacs` configuration:
 (graph-node-property-get retrieved-node :category)  ; => "entry-point"
 
 ;; Get connected nodes (neighbors)
-(graph-get-neighbors g (node-id node1))    ; => List of successor nodes
-(graph-get-neighbors g (node-id node2) t)  ; => List of predecessor nodes
+(graph-neighbors g (node-id node1))    ; => List of successor nodes
+(graph-neighbors g (node-id node2) t)  ; => List of predecessor nodes
 ```
 
 ## Advanced usage

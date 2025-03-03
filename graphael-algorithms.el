@@ -41,7 +41,7 @@ Uses depth-first search with visited and path tracking to detect cycles."
                                (or (gethash (node-id neighbor) path)
                                  (and (not (gethash (node-id neighbor) visited))
                                    (visit (node-id neighbor)))))
-                      (graph-get-neighbors graph node))
+                      (graph-neighbors graph node))
                     (remhash node path))))
       (cl-some #'visit (hash-table-keys (graph-nodes graph))))))
 
@@ -63,8 +63,8 @@ Returns nil for empty graphs."
           (let ((current (pop queue)))
             ;; Get both outgoing and incoming edges (treat as undirected)
             (dolist (neighbor (append
-                                (graph-get-neighbors graph current)
-                                (graph-get-neighbors graph current t)))
+                                (graph-neighbors graph current)
+                                (graph-neighbors graph current t)))
               (let ((neighbor-id (node-id neighbor)))
                 (unless (gethash neighbor-id visited)
                   (puthash neighbor-id t visited)
@@ -98,7 +98,7 @@ This finds any valid path, not necessarily the shortest or optimal one."
                                (and (not (gethash (node-id next) visited))
                                  (visit (node-id next) target
                                    (cons node path))))
-                      (graph-get-neighbors graph node)))))
+                      (graph-neighbors graph node)))))
       (let ((id-path (nreverse (visit from-id to-id nil))))
         (when id-path
           (mapcar (lambda (id) (graph-node-get graph id)) id-path))))))
@@ -170,7 +170,7 @@ and DISTANCE is the total accumulated weight."
           (puthash current t closed-set)
 
           ;; Check each neighbor
-          (dolist (edge (graph-get-node-edges graph current))
+          (dolist (edge (graph-node-edges graph current))
             (let* ((neighbor (edge-to edge))
                    (tentative-g (+ current-g (edge-weight edge))))
 
@@ -278,7 +278,7 @@ every directed edge (u,v), vertex u comes before v in the ordering."
     ;; Initialize in-degree counts for all nodes
     (maphash (lambda (node-id _)
                (puthash node-id
-                 (length (graph-get-node-edges graph node-id t))
+                 (length (graph-node-edges graph node-id t))
                  in-degree))
       (graph-nodes graph))
 
@@ -294,7 +294,7 @@ every directed edge (u,v), vertex u comes before v in the ordering."
       for current-node = (graph-node-get graph current-id)
       do (push current-node sorted-nodes)
       ;; Process outgoing edges
-      do (dolist (edge (graph-get-node-edges graph current-id))
+      do (dolist (edge (graph-node-edges graph current-id))
            (let* ((neighbor-id (edge-to edge))
                   (new-degree (1- (gethash neighbor-id in-degree))))
              ;; Update in-degree and queue if needed

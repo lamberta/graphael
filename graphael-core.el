@@ -364,11 +364,11 @@ Return the removed node."
 Return the removed node."
   (graph-node-remove graph (node-id node)))
 
-(cl-defgeneric graph-get-neighbors (graph node-or-id &optional incoming)
+(cl-defgeneric graph-neighbors (graph node-or-id &optional incoming)
   "Return neighboring nodes connected to NODE in GRAPH.
 If INCOMING is non-nil, get predecessor nodes instead of successor nodes.")
 
-(cl-defmethod graph-get-neighbors ((graph graph) (node-id string) &optional incoming)
+(cl-defmethod graph-neighbors ((graph graph) (node-id string) &optional incoming)
   "Return neighboring nodes connected to NODE-ID in GRAPH.
 If INCOMING is non-nil, get predecessor nodes instead of successor nodes."
   (unless (graph-uuid-p node-id)
@@ -376,7 +376,7 @@ If INCOMING is non-nil, get predecessor nodes instead of successor nodes."
   (unless (graph-node-p graph node-id)
     (error "Node %s does not exist" node-id))
 
-  (let ((edges (graph-get-node-edges graph node-id incoming)))
+  (let ((edges (graph-node-edges graph node-id incoming)))
     (mapcar (lambda (edge)
               (graph-node-get graph
                 (if incoming
@@ -384,10 +384,10 @@ If INCOMING is non-nil, get predecessor nodes instead of successor nodes."
                   (edge-to edge))))
       edges)))
 
-(cl-defmethod graph-get-neighbors ((graph graph) (node graph-node) &optional incoming)
+(cl-defmethod graph-neighbors ((graph graph) (node graph-node) &optional incoming)
   "Return neighboring nodes connected to NODE in GRAPH.
 If INCOMING is non-nil, get predecessor nodes instead of successor nodes."
-  (graph-get-neighbors graph (node-id node) incoming))
+  (graph-neighbors graph (node-id node) incoming))
 
 ;;; Edge Operations
 ;;;; Edge Reference Management
@@ -501,11 +501,11 @@ Return the added edge."
   "Remove EDGE from GRAPH. Return the removed edge."
   (graph-edge-remove graph (edge-id edge)))
 
-(cl-defgeneric graph-get-node-edges (graph node-or-id &optional incoming)
+(cl-defgeneric graph-node-edges (graph node-or-id &optional incoming)
   "Return edges connected to NODE-OR-ID in GRAPH.
 If INCOMING is non-nil, get incoming edges instead of outgoing.")
 
-(cl-defmethod graph-get-node-edges ((graph graph) node-id &optional incoming)
+(cl-defmethod graph-node-edges ((graph graph) node-id &optional incoming)
   "Return edges connected to NODE-ID in GRAPH.
 If INCOMING is non-nil, get incoming edges instead of outgoing."
   (unless (graph-uuid-p node-id)
@@ -520,10 +520,10 @@ If INCOMING is non-nil, get incoming edges instead of outgoing."
               (gethash edge-id (graph-edges graph)))
       (seq-into edge-ids 'list))))
 
-(cl-defmethod graph-get-node-edges ((graph graph) (node graph-node) &optional incoming)
+(cl-defmethod graph-node-edges ((graph graph) (node graph-node) &optional incoming)
   "Return edges connected to NODE in GRAPH.
 If INCOMING is non-nil, get incoming edges instead of outgoing."
-  (graph-get-node-edges graph (node-id node) incoming))
+  (graph-node-edges graph (node-id node) incoming))
 
 (provide 'graphael-core)
 ;;; graphael-core.el ends here
