@@ -17,10 +17,10 @@ graphs. Features include:
 Clone the repository:
 
 ```bash
-git clone https://github.com/lamberta/graphael.git
+$ git clone https://github.com/lamberta/graphael.git
 ```
 
-Add to your `.emacs` configuration:
+Load the library in your Emacs Lisp project:
 
 ```elisp
 (add-to-list 'load-path "/path/to/graphael")
