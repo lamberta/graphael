@@ -2,7 +2,7 @@
 
 ;; Author: Billy Lamberta
 ;; URL: https://github.com/lamberta/graphael
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Created: Feb 2025
 ;; Updated: Mar 2025
 ;; Package-Requires: ((emacs "26.2"))

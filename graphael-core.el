@@ -42,11 +42,12 @@
       :initform nil
       :type (or null string)
       :documentation "Optional descriptive label for the node")
-    (data
-      :initarg :data
-      :accessor node-data
-      :initform nil
-      :documentation "Optional user-defined node metadata/payload"))
+    (attrs
+      :initarg :attrs
+      :accessor node-attrs
+      :initform '()
+      :type list
+      :documentation "Optional user-defined plist for node metadata"))
   :documentation "A node in the graph, identified by UUID.")
 
 (cl-defmethod initialize-instance :after ((node graph-node) _slots)
@@ -93,11 +94,12 @@
       :initform nil
       :type (or null string)
       :documentation "Optional descriptive label for the edge")
-    (data
-      :initarg :data
-      :accessor edge-data
-      :initform nil
-      :documentation "Optional user-defined edge metadata/payload"))
+    (attrs
+      :initarg :attrs
+      :accessor edge-attrs
+      :initform '()
+      :type list
+      :documentation "Optional user-defined plist for edge metadata"))
   :documentation "A directed edge connecting two nodes in the graph.")
 
 (cl-defmethod initialize-instance :after ((edge graph-edge) _slots)
@@ -189,25 +191,25 @@ from causing data inconsistencies."
 
 ;;;; Property Functions
 
-(defun graph-node-property-put (node property value)
+(defun graph-node-attr-put (node property value)
   "Set PROPERTY to VALUE on NODE.
-Modifies the node's data plist."
-  (let ((data (or (node-data node) ())))
-    (setf (node-data node) (plist-put data property value))))
+Modifies the node's `attrs' plist."
+  (let ((attrs (or (node-attrs node) ())))
+    (setf (node-attrs node) (plist-put attrs property value))))
 
-(defun graph-node-property-get (node property &optional default)
-  "Get value of PROPERTY from NODE, or DEFAULT if not found."
-  (or (plist-get (node-data node) property) default))
+(defun graph-node-attr-get (node property &optional default)
+  "Get value of PROPERTY from NODE `attrs', or DEFAULT if not found."
+  (or (plist-get (node-attrs node) property) default))
 
-(defun graph-edge-property-put (edge property value)
+(defun graph-edge-attr-put (edge property value)
   "Set PROPERTY to VALUE on EDGE.
-Modifies the edge's data plist."
-  (let ((data (or (edge-data edge) ())))
-    (setf (edge-data edge) (plist-put data property value))))
+Modifies the edge's `attrs' plist."
+  (let ((attrs (or (edge-attrs edge) ())))
+    (setf (edge-attrs edge) (plist-put attrs property value))))
 
-(defun graph-edge-property-get (edge property &optional default)
-  "Get value of PROPERTY from EDGE, or DEFAULT if not found."
-  (or (plist-get (edge-data edge) property) default))
+(defun graph-edge-attr-get (edge property &optional default)
+  "Get value of PROPERTY from EDGE `attrs', or DEFAULT if not found."
+  (or (plist-get (edge-attrs edge) property) default))
 
 ;;; Basic Graph API
 ;;;; Common Queries
@@ -264,20 +266,20 @@ Modifies the edge's data plist."
 
 ;;; Node Operations
 
-(cl-defgeneric graph-node-add (graph &key id node label data)
+(cl-defgeneric graph-node-add (graph &key id node label attrs)
   "Add a node to GRAPH specified by keywords.
 If both ID and NODE are provided, an error is signaled.
 If neither is provided, a new node is created.
 Optional LABEL provides descriptive string for the node.
-Optional DATA can be any metadata to associate with the node.
+Optional ATTRS can be any metadata to associate with the node.
 Returns the added node.")
 
-(cl-defmethod graph-node-add ((graph graph) &key id node label data)
+(cl-defmethod graph-node-add ((graph graph) &key id node label attrs)
   "Add a node to GRAPH specified by keywords.
 If both ID and NODE are provided, an error is signaled.
 If neither is provided, a new node is created.
 Optional LABEL provides descriptive string for the node.
-Optional DATA can be any metadata to associate with the node.
+Optional ATTRS can be any metadata to associate with the node.
 Returns the added node."
   (let* ((n (cond
               ((and id node)
@@ -300,7 +302,7 @@ Returns the added node."
 
     ;; Set optional properties
     (when label (setf (node-label n) label))
-    (when data (setf (node-data n) data))
+    (when attrs (setf (node-attrs n) attrs))
 
     (with-graph-transaction (graph)
       (puthash node-id n (graph-nodes graph))
@@ -422,7 +424,7 @@ If INCOMING is non-nil, get predecessor nodes instead of successor nodes."
 
 ;;;; Edge Creation and Removal
 
-(cl-defmethod graph-edge-add ((graph graph) &key id edge from to weight label data)
+(cl-defmethod graph-edge-add ((graph graph) &key id edge from to weight label attrs)
   "Add an edge to GRAPH specified by keywords.
 Either :EDGE or both :FROM and :TO must be provided.
 If :EDGE is provided, add that edge object directly.
@@ -430,7 +432,7 @@ If :ID is provided, use it as the edge UUID, otherwise generate one.
 :FROM and :TO can be node objects or node UUID strings.
 :WEIGHT sets edge weight (defaults to 1.0).
 :LABEL provides descriptive string for the edge.
-:DATA can be any metadata to associate with the edge.
+:ATTRS can be any metadata to associate with the edge.
 Return the added edge."
   (let* ((e (cond
               ((and edge (or from to))
@@ -473,7 +475,7 @@ Return the added edge."
     ;; Set optional properties
     (when weight (setf (edge-weight e) weight))
     (when label (setf (edge-label e) label))
-    (when data (setf (edge-data e) data))
+    (when attrs (setf (edge-attrs e) attrs))
 
     ;; Add to graph
     (with-graph-transaction (graph)

@@ -119,18 +119,18 @@
            (id (node-id node)))
       (should-error (graph-edge-add g :from id :to id)))))
 
-(ert-deftest graphael-node-data-test ()
-  "Test node data storage and retrieval."
+(ert-deftest graphael-node-attrs-test ()
+  "Test node attrs storage and retrieval."
   (let* ((g (make-instance 'graph))
          (node (graph-node-add g))
-         (data '(:key "value")))
-    (setf (node-data node) data)
-    (should (equal (node-data node) data))
-    (should (equal (node-data (graph-node-get g (node-id node))) data))
-    ;; Test property helpers
-    (graph-node-property-put node :color "blue")
-    (should (equal (graph-node-property-get node :color) "blue"))
-    (should (equal (graph-node-property-get node :missing "default") "default"))))
+         (attrs '(:key "value")))
+    (setf (node-attrs node) attrs)
+    (should (equal (node-attrs node) attrs))
+    (should (equal (node-attrs (graph-node-get g (node-id node))) attrs))
+    ;; Test attr helpers
+    (graph-node-attr-put node :color "blue")
+    (should (equal (graph-node-attr-get node :color) "blue"))
+    (should (equal (graph-node-attr-get node :missing "default") "default"))))
 
 (ert-deftest graphael-edge-attributes-test ()
   "Test edge attributes."
@@ -146,12 +146,12 @@
     (should-not (edge-label edge))
     (setf (edge-label edge) "test-label")
     (should (string= (edge-label edge) "test-label"))
-    ;; Test data and property helpers
-    (let ((data '(:key "value")))
-      (setf (edge-data edge) data)
-      (should (equal (edge-data edge) data))
-      (graph-edge-property-put edge :priority "high")
-      (should (equal (graph-edge-property-get edge :priority) "high")))))
+    ;; Test attrs helpers
+    (let ((attrs '(:key "value")))
+      (setf (edge-attrs edge) attrs)
+      (should (equal (edge-attrs edge) attrs))
+      (graph-edge-attr-put edge :priority "high")
+      (should (equal (graph-edge-attr-get edge :priority) "high")))))
 
 (ert-deftest graphael-multiple-edges-test ()
   "Test handling of multiple edges between nodes."
@@ -201,24 +201,24 @@
     (should (graph-node-p g (node-id node1)))
     (should (graph-node-p g (node-id node3)))))
 
-(ert-deftest graphael-property-handling-test ()
-  "Test property handling with complex data structures."
+(ert-deftest graphael-attr-handling-test ()
+  "Test attr handling with complex attrs structures."
   (let* ((g (make-instance 'graph))
          (node (graph-node-add g))
-         (complex-data '(:array [1 2 3]
-                          :hash ,(make-hash-table)
-                          :nested (:a (:b 1)))))
-    ;; Test storing complex data
-    (graph-node-property-put node :complex complex-data)
-    (should (equal (graph-node-property-get node :complex) complex-data))
+         (complex-attrs '(:array [1 2 3]
+                           :hash ,(make-hash-table)
+                           :nested (:a (:b 1)))))
+    ;; Test storing complex attrs
+    (graph-node-attr-put node :complex complex-attrs)
+    (should (equal (graph-node-attr-get node :complex) complex-attrs))
     ;; Test multiple properties
-    (graph-node-property-put node :p1 "value1")
-    (graph-node-property-put node :p2 "value2")
-    (should (equal (graph-node-property-get node :p1) "value1"))
-    (should (equal (graph-node-property-get node :p2) "value2"))
+    (graph-node-attr-put node :p1 "value1")
+    (graph-node-attr-put node :p2 "value2")
+    (should (equal (graph-node-attr-get node :p1) "value1"))
+    (should (equal (graph-node-attr-get node :p2) "value2"))
     ;; Test overwriting properties
-    (graph-node-property-put node :p1 "new-value")
-    (should (equal (graph-node-property-get node :p1) "new-value"))))
+    (graph-node-attr-put node :p1 "new-value")
+    (should (equal (graph-node-attr-get node :p1) "new-value"))))
 
 (ert-deftest graphael-edge-weight-handling-test ()
   "Test handling of edge weights."

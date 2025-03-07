@@ -34,8 +34,8 @@
          ;; Using the edge we create
          (_e2 (graph-edge-add g :from n2 :to n3)))
 
-    ;; Set some data to test deep copying
-    (setf (node-data n1) '(:label "Node 1"))
+    ;; Set some attrs to test deep copying
+    (setf (node-attrs n1) '(:label "Node 1"))
     (setf (edge-weight e1) 5.0)
 
     ;; Clone the graph
@@ -53,9 +53,9 @@
       (should (graph-node-p g2 (node-id n2)))
       (should (graph-node-p g2 (node-id n3)))
 
-      ;; Check that data was properly copied
-      (should (equal (node-data (graph-node-get g2 (node-id n1)))
-                (node-data n1)))
+      ;; Check that attrs was properly copied
+      (should (equal (node-attrs (graph-node-get g2 (node-id n1)))
+                (node-attrs n1)))
 
       ;; Modify cloned graph and verify original is unchanged
       (graph-node-remove g2 (node-id n3))

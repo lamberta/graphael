@@ -55,7 +55,7 @@
       for i from 0
       for x = (mod i 3)
       for y = (/ i 3)
-      do (setf (node-data node) (cons x y))
+      do (setf (node-attrs node) (cons x y))
       do (puthash (node-id node) (cons x y) coords))
 
     ;; Horizontal connections
@@ -133,7 +133,7 @@
          (get-coord (lambda (node)
                       (if (stringp node)
                         (gethash node coords)
-                        (node-data node))))
+                        (node-attrs node))))
           (manhattan (graph-astar-manhattan-distance g get-coord)))
 
     ;; Test A* with Manhattan distance heuristic
@@ -160,7 +160,7 @@
                       (lambda (node)
                         (if (stringp node)
                           (gethash node coords)
-                          (node-data node))))))
+                          (node-attrs node))))))
 
     ;; Test invalid cases
     (should-error (graph-find-path g start-id "invalid-id"))

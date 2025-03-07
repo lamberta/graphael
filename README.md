@@ -45,8 +45,8 @@ Add to your `.emacs` configuration:
 (setq edge2 (graph-edge-add g :from node2 :to node3 :weight 2.5))
 
 ;; Add metadata to nodes/edges
-(graph-node-property-put node1 :category "entry-point")
-(graph-edge-property-put edge2 :requires-permission t)
+(graph-node-attr-put node1 :category "entry-point")
+(graph-edge-attr-put edge2 :requires-permission t)
 ```
 
 ### Get node information
@@ -57,7 +57,7 @@ Add to your `.emacs` configuration:
 
 ;; Get node properties
 (node-label retrieved-node)  ; => "Start"
-(graph-node-property-get retrieved-node :category)  ; => "entry-point"
+(graph-node-attr-get retrieved-node :category)  ; => "entry-point"
 
 ;; Get connected nodes (neighbors)
 (graph-neighbors g (node-id node1))    ; => List of successor nodes
@@ -79,15 +79,15 @@ Add to your `.emacs` configuration:
 
 ```elisp
 ;; Assume grid layout and set (x . y) coordinates for each node
-(graph-node-property-put node1 :coords '(0 . 0))
-(graph-node-property-put node2 :coords '(2 . 3))
-(graph-node-property-put node3 :coords '(5 . 3))
+(graph-node-attr-put node1 :coords '(0 . 0))
+(graph-node-attr-put node2 :coords '(2 . 3))
+(graph-node-attr-put node3 :coords '(5 . 3))
 
 ;; Create the Manhattan distance heuristic function
 (let ((heuristic (graph-astar-manhattan-distance g
                    (lambda (node)
                      "Helper function to extract coordinates from a node"
-                     (graph-node-property-get node :coords)))))
+                     (graph-node-attr-get node :coords)))))
   (cl-multiple-value-bind (path distance)
     (graph-find-path-astar g node1 node3 heuristic)
     (message "Length: %d nodes, Distance: %.1f" (length path) distance)))

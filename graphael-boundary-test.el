@@ -72,25 +72,25 @@
     ;; Current implementation returns nil for non-existent nodes, doesn't error
     (should-not (graph-node-get g "not-a-uuid"))))
 
-(ert-deftest graphael-node-property-equality-test ()
-  "Test that property values maintain equality across operations."
+(ert-deftest graphael-node-attr-equality-test ()
+  "Test that attr values maintain equality across operations."
   (let* ((g (make-instance 'graph))
          (node (graph-node-add g :label "Test"))
-         (complex-data (list :vector [1 2 3] :list '(a b c))))
+         (complex-attrs (list :vector [1 2 3] :list '(a b c))))
 
-    ;; Add data to node
-    (setf (node-data node) complex-data)
+    ;; Add attrs to node
+    (setf (node-attrs node) complex-attrs)
 
     ;; Clone the graph
     (let* ((g2 (graph-clone g))
            (node2 (graph-node-get g2 (node-id node)))
-           (data2 (node-data node2)))
+           (attrs2 (node-attrs node2)))
 
-      ;; Data should be equal
-      (should (equal (plist-get complex-data :list)
-                (plist-get data2 :list)))
-      (should (equal (plist-get complex-data :vector)
-                (plist-get data2 :vector))))))
+      ;; Attrs should be equal
+      (should (equal (plist-get complex-attrs :list)
+                (plist-get attrs2 :list)))
+      (should (equal (plist-get complex-attrs :vector)
+                (plist-get attrs2 :vector))))))
 
 (ert-deftest graphael-concurrent-modification-test ()
   "Test concurrent modification of the graph is handled correctly."
@@ -152,7 +152,7 @@
     ;; Create a grid of nodes
     (dotimes (y size)
       (dotimes (x size)
-        (let ((node (graph-node-add g :data (cons x y))))
+        (let ((node (graph-node-add g :attrs (cons x y))))
           (puthash (cons x y) node nodes))))
 
     ;; Connect nodes in a grid pattern (with some random weights)
@@ -183,7 +183,7 @@
     ;; Restore randomness
     (random t)
     ;; Define coordinate function for heuristics
-    (cl-flet ((get-coord (node) (node-data node)))
+    (cl-flet ((get-coord (node) (node-attrs node)))
       ;; Test with different path finding algorithms
       (let* ((start-node (gethash (cons 0 0) nodes))
              (end-node (gethash (cons (1- size) (1- size)) nodes))
@@ -215,20 +215,20 @@
               (should (equal (car (last astar-path)) end-node)))))))))
 
 (ert-deftest graphael-circular-reference-test ()
-  "Test handling of circular references in node/edge data."
+  "Test handling of circular references in node/edge attrs."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g :label "Node 1"))
          (n2 (graph-node-add g :label "Node 2"))
-         (circular-data (list :self)))
+         (circular-attrs (list :self)))
 
     ;; Create circular reference differently (properly)
-    (setf (cdr circular-data) (list circular-data))
+    (setf (cdr circular-attrs) (list circular-attrs))
 
-    ;; Set data with circular reference
+    ;; Set attrs with circular reference
     ;; Note: The current implementation doesn't actually detect circular refs,
-    ;; so we're just testing that setting complex data works
-    (setf (node-data n1) circular-data)
-    (should (node-data n1))
+    ;; so we're just testing that setting complex attrs works
+    (setf (node-attrs n1) circular-attrs)
+    (should (node-attrs n1))
 
     ;; Test regular edge creation works
     (let ((edge (graph-edge-add g :from n1 :to n2)))

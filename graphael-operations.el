@@ -34,7 +34,7 @@
                                    :id (node-id node)
                                    :label (when (slot-boundp node 'label)
                                             (node-label node))
-                                   :data (copy-tree (node-data node)))))
+                                   :attrs (copy-tree (node-attrs node)))))
                    (graph-node-add new-graph :node new-node)))
         (graph-nodes graph))
 
@@ -46,7 +46,7 @@
                    :to (edge-to edge)
                    :weight (edge-weight edge)
                    :label (edge-label edge)
-                   :data (copy-tree (edge-data edge))))
+                   :attrs (copy-tree (edge-attrs edge))))
         (graph-edges graph)))
     new-graph))
 
@@ -65,7 +65,7 @@ For nodes with the same ID, the node from GRAPH1 is preserved."
                                      :id (node-id node)
                                      :label (when (slot-boundp node 'label)
                                               (node-label node))
-                                     :data (copy-tree (node-data node)))))
+                                     :attrs (copy-tree (node-attrs node)))))
                      (graph-node-add result :node new-node))))
         (graph-nodes graph2))
 
@@ -83,7 +83,7 @@ For nodes with the same ID, the node from GRAPH1 is preserved."
                          :to to-id
                          :weight (edge-weight edge)
                          :label (edge-label edge)
-                         :data (copy-tree (edge-data edge)))))))
+                         :attrs (copy-tree (edge-attrs edge)))))))
         (graph-edges graph2)))
     result))
 
@@ -135,7 +135,7 @@ to matching nodes."
           (graph-node-add new-graph
             :id (node-id node)
             :label (node-label node)
-            :data (copy-tree (node-data node))))))
+            :attrs (copy-tree (node-attrs node))))))
 
     ;; Add edges that connect included nodes
     (maphash (lambda (_id edge)
@@ -147,7 +147,7 @@ to matching nodes."
                    :to (edge-to edge)
                    :weight (edge-weight edge)
                    :label (edge-label edge)
-                   :data (copy-tree (edge-data edge)))))
+                   :attrs (copy-tree (edge-attrs edge)))))
       (graph-edges graph))
     new-graph))
 
