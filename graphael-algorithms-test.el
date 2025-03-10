@@ -25,7 +25,7 @@
 (require 'graphael-operations)
 (require 'graphael-algorithms)
 
-(ert-deftest graphael-cycle-detection-test ()
+(ert-deftest graphael-algorithms-test-cycle-detection ()
   "Test cycle detection functionality."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))
@@ -42,7 +42,7 @@
 
     (should (graph-cycle-p g))))
 
-(defun graphael-setup-test-grid ()
+(defun graphael-algorithms-test--setup-grid ()
   "Set up a 3x3 grid for pathfinding tests."
   (let* ((g (make-instance 'graph))
          (nodes (cl-loop for y from 0 to 2
@@ -82,9 +82,9 @@
     ;; Return values
     (list g nodes coords)))
 
-(ert-deftest graphael-basic-pathfinding-test ()
+(ert-deftest graphael-algorithms-test-basic-pathfinding ()
   "Test basic pathfinding with depth-first search."
-  (let* ((setup (graphael-setup-test-grid))
+  (let* ((setup (graphael-algorithms-test--setup-grid))
          (g (nth 0 setup))
          (nodes (nth 1 setup))
          (start-node (nth 0 nodes))
@@ -100,9 +100,9 @@
       (should (equal (car path) start-node))
       (should (equal (car (last path)) goal-node)))))
 
-(ert-deftest graphael-dijkstra-pathfinding-test ()
+(ert-deftest graphael-algorithms-test-dijkstra-pathfinding ()
   "Test Dijkstra's shortest path algorithm."
-  (let* ((setup (graphael-setup-test-grid))
+  (let* ((setup (graphael-algorithms-test--setup-grid))
          (g (nth 0 setup))
          (nodes (nth 1 setup))
          (start-node (nth 0 nodes))
@@ -120,9 +120,9 @@
       ;; Path should have a reasonable cost
       (should (numberp cost)))))
 
-(ert-deftest graphael-astar-pathfinding-test ()
+(ert-deftest graphael-algorithms-test-astar-pathfinding ()
   "Test A* pathfinding algorithm."
-  (let* ((setup (graphael-setup-test-grid))
+  (let* ((setup (graphael-algorithms-test--setup-grid))
          (g (nth 0 setup))
          (nodes (nth 1 setup))
          (coords (nth 2 setup))
@@ -148,9 +148,9 @@
       (cl-multiple-value-bind (_ dijkstra-cost) (graph-find-path-shortest g start-id goal-id)
         (should (= cost dijkstra-cost))))))
 
-(ert-deftest graphael-pathfinding-error-test ()
+(ert-deftest graphael-algorithms-test-pathfinding-error ()
   "Test error handling in pathfinding functions."
-  (let* ((setup (graphael-setup-test-grid))
+  (let* ((setup (graphael-algorithms-test--setup-grid))
          (g (nth 0 setup))
          (nodes (nth 1 setup))
          (coords (nth 2 setup))
@@ -183,7 +183,7 @@
         (should-not path)
         (should-not cost)))))
 
-(ert-deftest graphael-topological-sort-test ()
+(ert-deftest graphael-algorithms-test-topological-sort ()
   "Test topological sorting of a directed acyclic graph."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))
@@ -239,7 +239,7 @@
     (should (graph-cycle-p g))
     (should-error (graph-topological-sort g))))
 
-(ert-deftest graphael-connectivity-test ()
+(ert-deftest graphael-algorithms-test-connectivity ()
   "Test graph connectivity detection."
   (let ((g (make-instance 'graph)))
     ;; Empty graph is not connected

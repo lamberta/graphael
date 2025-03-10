@@ -26,7 +26,7 @@
 (require 'graphael-operations)
 (require 'graphael-algorithms)
 
-(ert-deftest graphael-large-graph-edge-case-test ()
+(ert-deftest graphael-boundary-test-large-graph ()
   "Test building and managing a graph with many nodes and edges."
   (let* ((g (make-instance 'graph))
          ;; Use a smaller node count to avoid excessive nesting
@@ -53,7 +53,7 @@
       ;; Should be half the nodes plus 1
       (should (= (length path) (1+ (/ node-count 2)))))))
 
-(ert-deftest graphael-uuid-edge-case-test ()
+(ert-deftest graphael-boundary-test-uuid ()
   "Test edge cases with UUIDs."
   (let* ((g (make-instance 'graph))
          (uuid "12345678-1234-1234-1234-123456789abc")
@@ -72,7 +72,7 @@
     ;; Current implementation returns nil for non-existent nodes, doesn't error
     (should-not (graph-node-get g "not-a-uuid"))))
 
-(ert-deftest graphael-node-attr-equality-test ()
+(ert-deftest graphael-boundary-test-node-attr-equality ()
   "Test that attr values maintain equality across operations."
   (let* ((g (make-instance 'graph))
          (node (graph-node-add g :label "Test"))
@@ -92,7 +92,7 @@
       (should (equal (plist-get complex-attrs :vector)
                 (plist-get attrs2 :vector))))))
 
-(ert-deftest graphael-concurrent-modification-test ()
+(ert-deftest graphael-boundary-test-concurrent-modification ()
   "Test concurrent modification of the graph is handled correctly."
   (let* ((g (make-instance 'graph))
          (thread1-done nil)
@@ -139,7 +139,7 @@
       (should (= (graph-node-count g) (+ 10 (* 2 100))))
       (should (>= (graph-edge-count g) 100)))))
 
-(ert-deftest graphael-algorithm-stress-test ()
+(ert-deftest graphael-boundary-test-algorithm-stress-test ()
   "Stress test algorithms on complex graph structures."
   (let* ((g (make-instance 'graph))
          (size 30) ; 30x30 grid = 900 nodes
@@ -214,7 +214,7 @@
               (should (equal (car astar-path) start-node))
               (should (equal (car (last astar-path)) end-node)))))))))
 
-(ert-deftest graphael-circular-reference-test ()
+(ert-deftest graphael-boundary-test-circular-references ()
   "Test handling of circular references in node/edge attrs."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g :label "Node 1"))
@@ -235,7 +235,7 @@
       (should edge)
       (should (graph-edge-p g (edge-id edge))))))
 
-(ert-deftest graphael-api-consistency-test ()
+(ert-deftest graphael-boundary-test-api-consistency ()
   "Test consistency of the API across different operations."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g :label "Node 1"))
@@ -259,7 +259,7 @@
       (should-not (graph-node-p g2 id2a))
       (should-not (graph-node-p g2 id2b)))))
 
-(ert-deftest graphael-zero-weight-edge-test ()
+(ert-deftest graphael-boundary-test-zero-weight-edge ()
   "Test edges with zero weight."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))

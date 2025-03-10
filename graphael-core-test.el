@@ -23,7 +23,7 @@
 (require 'ert)
 (require 'graphael-core)
 
-(ert-deftest graphael-creation-test ()
+(ert-deftest graphael-core-test-creation ()
   "Test basic graph creation."
   (let ((g (make-instance 'graph)))
     (should (hash-table-empty-p (graph-nodes g)))
@@ -34,7 +34,7 @@
     (should (zerop (graph-edge-count g)))
     (should (graph-empty-p g))))
 
-(ert-deftest graphael-node-operations-test ()
+(ert-deftest graphael-core-test-node-operations ()
   "Test node creation and removal."
   (let* ((g (make-instance 'graph))
          (node1 (graph-node-add g))
@@ -55,7 +55,7 @@
     (should (graph-node-p g id2))
     (should (= (hash-table-count (graph-nodes g)) 1))))
 
-(ert-deftest graphael-edge-operations-test ()
+(ert-deftest graphael-core-test-edge-operations ()
   "Test edge creation and removal."
   (let* ((g (make-instance 'graph))
          (node1 (graph-node-add g))
@@ -78,7 +78,7 @@
     (should-not (graph-node-edges g (node-id node1)))
     (should-not (graph-node-edges g (node-id node2) t))))
 
-(ert-deftest graphael-multiple-dispatch-test ()
+(ert-deftest graphael-core-test-multiple-dispatch ()
   "Test that multiple dispatch methods work consistently."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))
@@ -100,7 +100,7 @@
       (should (= (length edges1) 2))
       (should (equal edges1 edges2)))))
 
-(ert-deftest graphael-validation-test ()
+(ert-deftest graphael-core-test-validation ()
   "Test validation and error cases."
   (let ((g (make-instance 'graph)))
     ;; Invalid UUIDs
@@ -119,7 +119,7 @@
            (id (node-id node)))
       (should-error (graph-edge-add g :from id :to id)))))
 
-(ert-deftest graphael-node-attrs-test ()
+(ert-deftest graphael-core-test-node-attrs ()
   "Test node attrs storage and retrieval."
   (let* ((g (make-instance 'graph))
          (node (graph-node-add g))
@@ -132,7 +132,7 @@
     (should (equal (graph-node-attr-get node :color) "blue"))
     (should (equal (graph-node-attr-get node :missing "default") "default"))))
 
-(ert-deftest graphael-edge-attributes-test ()
+(ert-deftest graphael-core-test-edge-attributes ()
   "Test edge attributes."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))
@@ -153,7 +153,7 @@
       (graph-edge-attr-put edge :priority "high")
       (should (equal (graph-edge-attr-get edge :priority) "high")))))
 
-(ert-deftest graphael-multiple-edges-test ()
+(ert-deftest graphael-core-test-multiple-edges ()
   "Test handling of multiple edges between nodes."
   (let* ((g (make-instance 'graph))
          (node1 (graph-node-add g))
@@ -178,7 +178,7 @@
       (should (member edge1 incoming))
       (should (member edge2 incoming)))))
 
-(ert-deftest graphael-node-removal-with-edges-test ()
+(ert-deftest graphael-core-test-node-removal-with-edges ()
   "Test node removal when nodes have edges."
   (let* ((g (make-instance 'graph))
          (node1 (graph-node-add g))
@@ -201,7 +201,7 @@
     (should (graph-node-p g (node-id node1)))
     (should (graph-node-p g (node-id node3)))))
 
-(ert-deftest graphael-attr-handling-test ()
+(ert-deftest graphael-core-test-attr-handling ()
   "Test attr handling with complex attrs structures."
   (let* ((g (make-instance 'graph))
          (node (graph-node-add g))
@@ -220,7 +220,7 @@
     (graph-node-attr-put node :p1 "new-value")
     (should (equal (graph-node-attr-get node :p1) "new-value"))))
 
-(ert-deftest graphael-edge-weight-handling-test ()
+(ert-deftest graphael-core-test-edge-weight-handling ()
   "Test handling of edge weights."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))
@@ -234,7 +234,7 @@
     ;; Test invalid weight
     (should-error (setf (edge-weight edge) -1.0))))
 
-(ert-deftest graphael-transaction-safety-test ()
+(ert-deftest graphael-core-test-transaction-safety ()
   "Test that transactions properly protect operations."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))
@@ -252,7 +252,7 @@
     ;; Current implementation doesn't roll back on error
     (should (= (graph-edge-count g) 2))))
 
-(ert-deftest graphael-path-operations-test ()
+(ert-deftest graphael-core-test-path-operations ()
   "Test creating paths and working with them."
   (let* ((g (make-instance 'graph))
          (nodes (cl-loop for i from 1 to 5
@@ -266,7 +266,7 @@
       (graph-node-remove g (nth 2 nodes))
       (should-not (graph-find-path g (node-id (car nodes)) (node-id (car (last nodes))))))))
 
-(ert-deftest graphael-algorithm-edge-cases-test ()
+(ert-deftest graphael-core-test-algorithm-edge-cases ()
   "Test algorithms with edge cases."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g)))
@@ -288,7 +288,7 @@
       (should (graph-find-path g (node-id n2) (node-id n3)))
       (should-not (graph-find-path g (node-id n3) (node-id n2)))))) ; Directed graph
 
-(ert-deftest graphael-performance-stress-test ()
+(ert-deftest graphael-core-test-performance-stress ()
   "Test performance with larger graphs."
   (let* ((g (make-instance 'graph))
          (node-count 100)

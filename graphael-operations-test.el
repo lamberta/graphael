@@ -24,7 +24,7 @@
 (require 'graphael-core)
 (require 'graphael-operations)
 
-(ert-deftest graphael-clone-test ()
+(ert-deftest graphael-operations-test-clone ()
   "Test graph cloning functionality."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))
@@ -62,7 +62,7 @@
       (should (graph-node-p g (node-id n3)))
       (should-not (graph-node-p g2 (node-id n3))))))
 
-(ert-deftest graphael-merge-test ()
+(ert-deftest graphael-operations-test-merge ()
   "Test merging of two graphs."
   (let* (;; Create first graph
          (g1 (make-instance 'graph))
@@ -132,7 +132,7 @@
     (should (= (hash-table-count (graph-nodes g2)) 3))
     (should (= (hash-table-count (graph-edges g2)) 2))))
 
-(ert-deftest graphael-subgraph-test ()
+(ert-deftest graphael-operations-test-subgraph ()
   "Test creating a subgraph."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g :label "Node 1"))
@@ -168,7 +168,7 @@
       (should (graph-edge-p sub3 (edge-id e3)))
       (should-not (graph-edge-p sub3 (edge-id e1))))))
 
-(ert-deftest graphael-subgraph-node-objects-test ()
+(ert-deftest graphael-operations-test-subgraph-node-objects ()
   "Test creating a subgraph with node objects instead of IDs."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g :label "Node 1"))
@@ -200,7 +200,7 @@
       (should-not (graph-node-p sub2 (node-id n2)))
       (should-not (graph-node-p sub2 (node-id n4))))))
 
-(ert-deftest graphael-graph-set-operations-test ()
+(ert-deftest graphael-operations-test-graph-set-operations ()
   "Test graph set operations (difference and intersection)."
   (let* ((g1 (make-instance 'graph))
          (n1-1 (graph-node-add g1 :label "A"))
@@ -244,7 +244,7 @@
       (should-not (graph-node-p result (node-id n1-1)))
       (should-not (graph-node-p result (node-id n1-4))))))
 
-(ert-deftest graphael-add-path-test ()
+(ert-deftest graphael-operations-test-add-path ()
   "Test adding a path to a graph."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))
@@ -272,7 +272,7 @@
       (should (= (length (graph-node-edges g id3 t)) 1))
       (should (= (length (graph-node-edges g id4 t)) 1)))))
 
-(ert-deftest graphael-stats-test ()
+(ert-deftest graphael-operations-test-stats ()
   "Test graph statistics functions."
   (let* ((g (make-instance 'graph))
          (n1 (graph-node-add g))
